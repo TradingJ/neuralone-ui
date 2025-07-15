@@ -1,51 +1,26 @@
 'use client'
 
-import * as React from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-import { cn } from '@/lib/utils'
-import { Button, type ButtonProps } from '@/components/ui/button'
-import { IconGitHub, IconSpinner } from '@/components/ui/icons'
-
-interface LoginButtonProps extends ButtonProps {
-  showGithubIcon?: boolean
-  text?: string
-}
-
-export function LoginButton({
-  text = 'Login with GitHub',
-  showGithubIcon = true,
-  className,
-  ...props
-}: LoginButtonProps) {
-  const [isLoading, setIsLoading] = React.useState(false)
-  // Create a Supabase client configured to use cookies
+export function LoginButton() {
   const supabase = createClientComponentClient()
 
-  if (process.env.NEXT_PUBLIC_AUTH_GITHUB !== 'true') {
-    return null
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+    if (error) {
+      console.error('Google login error:', error.message)
+    }
   }
 
   return (
-    <Button
-      variant="outline"
-      onClick={async () => {
-        setIsLoading(true)
-        await supabase.auth.signInWithOAuth({
-          provider: 'github',
-          options: { redirectTo: `${location.origin}/api/auth/callback` }
-        })
-      }}
-      disabled={isLoading}
-      className={cn(className)}
-      {...props}
+    <button
+      onClick={handleGoogleLogin}
+      className="w-full py-3 px-4 bg-black text-white rounded-lg text-lg hover:bg-gray-800"
     >
-      {isLoading ? (
-        <IconSpinner className="mr-2 animate-spin" />
-      ) : showGithubIcon ? (
-        <IconGitHub className="mr-2" />
-      ) : null}
-      {text}
-    </Button>
+      Continue with Google
+    </button>
   )
 }
+
