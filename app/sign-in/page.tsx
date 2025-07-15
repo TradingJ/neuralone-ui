@@ -1,4 +1,3 @@
-// app/(auth)/sign-in/page.tsx
 'use client'
 
 import { auth } from '@/auth'
@@ -12,7 +11,6 @@ export default async function SignInPage() {
   const cookieStore = cookies()
   const session = await auth({ cookieStore })
 
-  // Redirect if user is already logged in
   if (session?.user) {
     redirect('/')
   }
@@ -27,7 +25,7 @@ export default async function SignInPage() {
 
         <Separator className="my-4" />
 
-        {/* Optional email login */}
+        {/* Email login form */}
         <LoginForm action="sign-in" />
       </div>
     </div>
