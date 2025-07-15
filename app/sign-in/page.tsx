@@ -4,6 +4,19 @@ import { LoginForm } from '@/components/login-form'
 import { Separator } from '@/components/ui/separator'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+'use client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
+const handleGoogleLogin = async () => {
+  const supabase = createClientComponentClient()
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+  })
+  if (error) {
+    console.error('Google login error:', error.message)
+  }
+}
+
 
 export default async function SignInPage() {
   const cookieStore = cookies()
